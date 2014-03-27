@@ -11,7 +11,6 @@ class qa_edit_history
 	private $pluginkey = 'edit_history';
 	private $optactive = 'edit_history_active';
 	private $ninja_edit_time = 'edit_history_NET';
-	private $view_permission = 'edit_history_view_permission';
 	private $enabled_external_users = 'edit_history_EEU';
 	private $external_users_table = 'edit_history_EUT';
 	private $external_users_table_key = 'edit_history_EUTK';
@@ -22,8 +21,6 @@ class qa_edit_history
 		switch($option) {
 			case 'ninja_edit_time':
 				return '300';
-			case 'view_permission':
-				return QA_USER_LEVEL_ADMIN;
 			case 'enabled_external_users':
 				return 0;
 			case 'external_users_table':
@@ -64,7 +61,6 @@ class qa_edit_history
 	{
 		$saved_msg = '';
 		$error = null;
-		$permitoptions = qa_admin_permit_options(QA_PERMIT_ALL, QA_PERMIT_SUPERS, false, false);
 
 		if ( qa_clicked('edit_history_save') )
 		{
@@ -96,7 +92,6 @@ class qa_edit_history
 				else
 					qa_opt( $this->optactive, '0' );
 				qa_opt( $this->ninja_edit_time, (int)qa_post_text('ninja_edit_time') );
-				qa_opt( $this->view_permission, (int)qa_post_text('view_permission') );
 				//qa_opt( $this->enabled_external_users, qa_post_text('enabled_external_users') );
 				if ( qa_post_text('enabled_external_users') ) qa_opt( $this->enabled_external_users, '1' );
 				else qa_opt( $this->enabled_external_users, '0' );
@@ -108,7 +103,6 @@ class qa_edit_history
 		if ( qa_clicked('edit_history_reset') )
 		{
 			qa_opt($this->ninja_edit_time, $this->option_default('ninja_edit_time'));
-			qa_opt($this->view_permission, $this->option_default('view_permission'));
 			qa_opt($this->enabled_external_users, $this->option_default('enabled_external_users'));
 			qa_opt($this->external_users_table, $this->option_default('external_users_table'));
 			qa_opt($this->external_users_table_key, $this->option_default('external_users_table_key'));
@@ -117,7 +111,6 @@ class qa_edit_history
 
 		$eh_active = qa_opt($this->optactive);
 		$ninja_edit_time = qa_opt($this->ninja_edit_time);
-		$view_permission = qa_opt($this->view_permission);
 		$enabled_external_users = qa_opt($this->enabled_external_users);
 		$external_users_table = qa_opt($this->external_users_table);
 		$external_users_table_key = qa_opt($this->external_users_table_key);
@@ -141,14 +134,6 @@ class qa_edit_history
 					'tags' => 'NAME="ninja_edit_time"',
 					'value' => $ninja_edit_time,
 					'note' => qa_lang_html('edithistory/ninja_edit_time_note'),
-				),
-				array(
-					'type' => 'select',
-					'label' => qa_lang_html('edithistory/view_permission'),
-					'tags' => 'NAME="view_permission"',
-					'value' =>  @$permitoptions[$view_permission],
-					'options' => $permitoptions,
-					'note' => qa_lang_html('edithistory/view_permission_note'),
 				),
 				array(
 					'type' => 'checkbox',
@@ -236,6 +221,9 @@ class qa_edit_history
 		if ( !in_array( $event, $attachevents ) )
 			return;
 
+		if( $params['silent'] == 1 )
+			return;
+			
 		// question title or content was not changed
 		if ( $event == 'q_edit' && $params['title'] === $params['oldtitle'] && $params['content'] === $params['oldcontent'] )
 			return;

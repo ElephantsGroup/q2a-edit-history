@@ -78,7 +78,7 @@ class qa_edh_revisions
 	{
 		$qa_content['title'] = qa_lang_html_sub('edithistory/revision_title', $postid);
 
-		if (qa_user_permit_error('edit_history_view_permission'))
+		if (qa_user_permit_error('permit_view_revisions'))
 		{
 			$qa_content['error'] = qa_lang_html('edithistory/permission_error');
 			return null;

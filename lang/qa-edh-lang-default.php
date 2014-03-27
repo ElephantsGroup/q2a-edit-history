@@ -36,4 +36,6 @@ return array(
 	'external_users_table_handle' => 'External users table handle field name',
 	'incorrect_entry' => 'Incorrect Entries',
 	'edit_locked' => 'This post has edited already. Please edit after ^ seconds.',
+	
+	'permit_view_revisions' => 'View post revisions'
 );
